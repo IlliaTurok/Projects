@@ -85,30 +85,41 @@ const Task: React.FC<TaskProps> = ({ task }) => {
         />
         <Modal modalOpen={openModalEdit} setModalOpen={setOpenModalEdit}>
           <form onSubmit={handleSubmitEditTodo}>
-            <h3 className="fond-bold text-lg">Edit task</h3>
-            <div className="modal-action">
-              <input
-                value={taskToEdit}
-                onChange={(e) => setTaskToEdit(e.target.value)}
-                type="text"
-                placeholder="Type here"
-                className="input input-border w-full"
-              />
+            <h3 className="font-bold text-lg mb-4">Edit task</h3>
+
+            <div className="flex flex-col gap-4">
+              <div>
+                <label className="label">
+                  <span className="label-text">Task</span>
+                </label>
+                <input
+                  value={taskToEdit}
+                  onChange={(e) => setTaskToEdit(e.target.value)}
+                  type="text"
+                  placeholder="Type here"
+                  className="input input-bordered w-full"
+                />
+              </div>
+
+              <div>
+                <label className="label">
+                  <span className="label-text">Deadline</span>
+                </label>
+                <input
+                  type="datetime-local"
+                  className="input input-bordered w-full"
+                  value={editDueDate}
+                  onChange={(e) => setEditDueDate(e.target.value)}
+                />
+              </div>
+
               <button type="submit" className="btn">
                 Submit
               </button>
-              <label className="label">
-                <span className="label-text">Deadline</span>
-              </label>
-              <input
-                type="datetime-local"
-                className="input input-bordered w-full"
-                value={editDueDate}
-                onChange={(e) => setEditDueDate(e.target.value)}
-              />
             </div>
           </form>
         </Modal>
+
         <FiTrash2
           onClick={() => setOpenModalDeleted(true)}
           cursor="pointer"

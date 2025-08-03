@@ -20,14 +20,18 @@ export async function GET() {
 // Add new task
 export async function POST(req: Request) {
   try {
-    const { text } = await req.json();
-    const newTask = await db.insert(tasks).values({ text }).returning();
+    const { text, dueDate } = await req.json();
+
+    const newTask = await db
+      .insert(tasks)
+      .values({
+        text,
+        dueDate: dueDate ? new Date(dueDate) : undefined,
+      })
+      .returning();
+
     return NextResponse.json(newTask[0]);
-  } catch (err) {
-    console.error("Error in Post /api/tasks:", err);
-    return NextResponse.json(
-      { error: "Something went wrong" },
-      { status: 500 }
-    );
+  } catch (error) {
+    return NextResponse.json({ error: "Failed to create task" }, { status: 500 });
   }
 }

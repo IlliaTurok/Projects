@@ -13,16 +13,20 @@ export const getAllTodos = async (): Promise<ITask[]> => {
   return todos;
 };
 
-export const addTodo = async (todo: { text: string }): Promise<ITask> => {
-  const res = await fetch(`/api/tasks`, {
+export const addTodo = async (todo: { text: string; dueDate?: string }) => {
+  const res = await fetch("/api/tasks", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({ text: todo.text }),
+    body: JSON.stringify(todo),
   });
+
+  if (!res.ok) throw new Error("Failed to add todo");
+
   return await res.json();
 };
+
 
 export const editTodo = async (todo: ITask): Promise<ITask> => {
   const res = await fetch(`/api/tasks/${todo.id}`, {
