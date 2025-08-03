@@ -33,7 +33,7 @@ const filteredTasks = showTodayOnly
           onChange={() => setShowTodayOnly(!showTodayOnly)}
           className="checkbox checkbox-sm"
         />
-        <span className="text-sm">Show only today's tasks</span>
+        <span className="text-sm">{"Show only today's tasks"}</span>
       </div>
 
       <table className="table bg-base-100">
