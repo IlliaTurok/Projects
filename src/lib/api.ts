@@ -1,7 +1,9 @@
 import { ITask } from "@/types/tasks";
 
 export const getAllTodos = async (): Promise<ITask[]> => {
-  const res = await fetch("/api/tasks", {
+  const baseUrl = process.env.BASE_URL || "http://localhost:3000";
+
+  const res = await fetch(`${baseUrl}/api/tasks`, {
     cache: "no-store",
   });
 
@@ -9,9 +11,9 @@ export const getAllTodos = async (): Promise<ITask[]> => {
     throw new Error("Error receiving tasks");
   }
 
-  const todos = await res.json();
-  return todos;
+  return res.json();
 };
+
 
 export async function addTodo(data: { text: string; dueDate: string }) {
   const response = await fetch("/api/tasks", {
