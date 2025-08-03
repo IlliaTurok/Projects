@@ -1,9 +1,12 @@
 import { ITask } from "@/types/tasks";
+function getBaseUrl() {
+  if (typeof window !== "undefined") return ""; // Browser should use relative URL
+  if (process.env.BASE_URL) return process.env.BASE_URL;
+  throw new Error("BASE_URL is not defined in env");
+}
 
 export const getAllTodos = async (): Promise<ITask[]> => {
-  const baseUrl = process.env.BASE_URL || "http://localhost:3000";
-
-  const res = await fetch(`${baseUrl}/api/tasks`, {
+  const res = await fetch(`${getBaseUrl()}/api/tasks`, {
     cache: "no-store",
   });
 
@@ -15,8 +18,10 @@ export const getAllTodos = async (): Promise<ITask[]> => {
 };
 
 
+
+
 export async function addTodo(data: { text: string; dueDate: string }) {
-  const response = await fetch("/api/tasks", {
+  const response = await fetch(`${getBaseUrl()}/api/tasks`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -32,7 +37,7 @@ export async function addTodo(data: { text: string; dueDate: string }) {
 };
 
 export const editTodo = async (todo: ITask): Promise<ITask> => {
-  const res = await fetch(`/api/tasks/${todo.id}`, {
+  const res = await fetch(`${getBaseUrl()}/api/tasks/${todo.id}`, {
     method: "PATCH",
     headers: {
       "Content-Type": "application/json",
@@ -52,7 +57,7 @@ export const editTodo = async (todo: ITask): Promise<ITask> => {
 };
 
 export const deleteTodo = async (id: string): Promise<void> => {
-  const res = await fetch(`/api/tasks/${id}`, {
+  const res = await fetch(`${getBaseUrl()}/api/tasks/${id}`, {
     method: "DELETE",
   });
 
@@ -65,7 +70,7 @@ export const completeTodo = async (
   id: number,
   completed: boolean
 ): Promise<ITask> => {
-  const res = await fetch(`/api/tasks/${id}`, {
+  const res = await fetch(`${getBaseUrl()}/api/tasks/${id}`, {
     method: "PATCH",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ completed }),
