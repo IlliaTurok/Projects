@@ -19,7 +19,7 @@ const filteredTasks = showTodayOnly
       const due = new Date(task.dueDate);
       const diffMs = due.getTime() - now.getTime();
 
-      return diffMs > 0 && diffMs <= 24 * 60 * 60 * 1000; // меньше 1 дня
+      return diffMs > 0 && diffMs <= 24 * 60 * 60 * 1000;
     })
   : tasks;
 
