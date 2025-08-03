@@ -6,7 +6,7 @@ function getBaseUrl() {
 }
 
 export const getAllTodos = async (): Promise<ITask[]> => {
-  const res = await fetch(`${getBaseUrl()}/api/tasks`, {
+  const res = await fetch(`/api/tasks`, {
     cache: "no-store",
   });
 
