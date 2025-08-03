@@ -1,7 +1,7 @@
 "use client";
 
 import { FormEventHandler, useState } from "react";
-import { ITask } from "../../../types/tasks";
+import { ITask } from "@/types/tasks";
 import { FiEdit, FiTrash2, FiCheck, FiCalendar } from "react-icons/fi";
 import Modal from "./Modal";
 import { addTodo, completeTodo, deleteTodo, editTodo } from "../../lib/api";
