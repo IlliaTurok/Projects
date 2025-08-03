@@ -1,9 +1,7 @@
 import { ITask } from "@/types/tasks";
 
-const baseUrl = process.env.BASE_URL || "http://localhost:3000";
-
 export const getAllTodos = async (): Promise<ITask[]> => {
-  const res = await fetch(`${baseUrl}/api/tasks`, {
+  const res = await fetch("/api/tasks", {
     cache: "no-store",
   });
 
@@ -15,22 +13,24 @@ export const getAllTodos = async (): Promise<ITask[]> => {
   return todos;
 };
 
-export const addTodo = async (todo: { text: string; dueDate?: string }) => {
-  const res = await fetch(`${baseUrl}/api/tasks`, {
+export async function addTodo(data: { text: string; dueDate: string }) {
+  const response = await fetch("/api/tasks", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify(todo),
+    body: JSON.stringify(data),
   });
 
-  if (!res.ok) throw new Error("Failed to add todo");
+  if (!response.ok) {
+    throw new Error("Failed to add todo");
+  }
 
-  return await res.json();
+  return response.json();
 };
 
 export const editTodo = async (todo: ITask): Promise<ITask> => {
-  const res = await fetch(`${baseUrl}/api/tasks/${todo.id}`, {
+  const res = await fetch(`/api/tasks/${todo.id}`, {
     method: "PATCH",
     headers: {
       "Content-Type": "application/json",
@@ -50,7 +50,7 @@ export const editTodo = async (todo: ITask): Promise<ITask> => {
 };
 
 export const deleteTodo = async (id: string): Promise<void> => {
-  const res = await fetch(`${baseUrl}/api/tasks/${id}`, {
+  const res = await fetch(`/api/tasks/${id}`, {
     method: "DELETE",
   });
 
@@ -63,7 +63,7 @@ export const completeTodo = async (
   id: number,
   completed: boolean
 ): Promise<ITask> => {
-  const res = await fetch(`${baseUrl}/api/tasks/${id}`, {
+  const res = await fetch(`/api/tasks/${id}`, {
     method: "PATCH",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ completed }),
