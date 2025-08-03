@@ -1,6 +1,7 @@
 "use client";
 
-import { ITask } from "../../../types/tasks";
+import { ITask } from "@/types/tasks";
+
 import Task from "./Task";
 import { useState } from "react";
 

@@ -1,4 +1,5 @@
-import { ITask } from "../../types/tasks";
+import { ITask } from "@/types/tasks";
+
 
 export const getAllTodos = async (): Promise<ITask[]> => {
   const res = await fetch(`http://localhost:3000/api/tasks`, {

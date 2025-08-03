@@ -19,7 +19,7 @@ const Task: React.FC<TaskProps> = ({ task }) => {
   const [editDueDate, setEditDueDate] = useState<string>(task.dueDate || "");
 
   const now = new Date();
-  const due = new Date(task.dueDate);
+const due = new Date(task.dueDate ?? "");
   const diffMs = due.getTime() - now.getTime();
 
   const isOverdue = diffMs < 0;
@@ -37,6 +37,7 @@ const Task: React.FC<TaskProps> = ({ task }) => {
       id: task.id,
       text: taskToEdit,
       dueDate: editDueDate,
+      completed: task.completed,
     });
     setOpenModalEdit(false);
     router.refresh();
@@ -131,7 +132,7 @@ const Task: React.FC<TaskProps> = ({ task }) => {
             Are you sure, you wand to delete this task?
           </h3>
           <div className="modal-action">
-            <button onClick={() => handleDeleteTask(task.id)} className="btn">
+            <button onClick={() => handleDeleteTask(String(task.id))} className="btn">
               Yes
             </button>
           </div>
