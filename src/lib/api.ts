@@ -1,13 +1,11 @@
 import { ITask } from "@/types/tasks";
 
+const baseUrl = process.env.BASE_URL || "http://localhost:3000";
+
 export const getAllTodos = async (): Promise<ITask[]> => {
- const baseUrl =
-  process.env.BASE_URL || "http://localhost:3000";
-
-const res = await fetch(`${baseUrl}/api/tasks`, {
-  cache: "no-store",
-});
-
+  const res = await fetch(`${baseUrl}/api/tasks`, {
+    cache: "no-store",
+  });
 
   if (!res.ok) {
     throw new Error("Error receiving tasks");
@@ -18,7 +16,7 @@ const res = await fetch(`${baseUrl}/api/tasks`, {
 };
 
 export const addTodo = async (todo: { text: string; dueDate?: string }) => {
-  const res = await fetch("/api/tasks", {
+  const res = await fetch(`${baseUrl}/api/tasks`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -32,7 +30,7 @@ export const addTodo = async (todo: { text: string; dueDate?: string }) => {
 };
 
 export const editTodo = async (todo: ITask): Promise<ITask> => {
-  const res = await fetch(`/api/tasks/${todo.id}`, {
+  const res = await fetch(`${baseUrl}/api/tasks/${todo.id}`, {
     method: "PATCH",
     headers: {
       "Content-Type": "application/json",
@@ -43,11 +41,16 @@ export const editTodo = async (todo: ITask): Promise<ITask> => {
       completed: todo.completed,
     }),
   });
+
+  if (!res.ok) {
+    throw new Error("Failed to edit todo");
+  }
+
   return await res.json();
 };
 
 export const deleteTodo = async (id: string): Promise<void> => {
-  const res = await fetch(`/api/tasks/${id}`, {
+  const res = await fetch(`${baseUrl}/api/tasks/${id}`, {
     method: "DELETE",
   });
 
@@ -60,10 +63,15 @@ export const completeTodo = async (
   id: number,
   completed: boolean
 ): Promise<ITask> => {
-  const res = await fetch(`/api/tasks/${id}`, {
+  const res = await fetch(`${baseUrl}/api/tasks/${id}`, {
     method: "PATCH",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ completed }),
   });
+
+  if (!res.ok) {
+    throw new Error("Failed to complete task");
+  }
+
   return await res.json();
 };

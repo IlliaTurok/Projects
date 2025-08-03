@@ -52,7 +52,6 @@ const due = new Date(task.dueDate ?? "");
     setOpenModalFinished(false);
     router.refresh();
   };
-  //тута смотриииииииииииииииииииии
   return (
     <tr key={task.id}>
       <td>{task.text}</td>
