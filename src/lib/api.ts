@@ -1,9 +1,13 @@
 import { ITask } from "@/types/tasks";
 
 export const getAllTodos = async (): Promise<ITask[]> => {
-  const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/tasks`, {
-    cache: "no-store",
-  });
+ const baseUrl =
+  process.env.BASE_URL || "http://localhost:3000";
+
+const res = await fetch(`${baseUrl}/api/tasks`, {
+  cache: "no-store",
+});
+
 
   if (!res.ok) {
     throw new Error("Error receiving tasks");
