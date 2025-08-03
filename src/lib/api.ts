@@ -1,8 +1,7 @@
 import { ITask } from "@/types/tasks";
 
-
 export const getAllTodos = async (): Promise<ITask[]> => {
-  const res = await fetch(`http://localhost:3000/api/tasks`, {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/tasks`, {
     cache: "no-store",
   });
 
@@ -27,7 +26,6 @@ export const addTodo = async (todo: { text: string; dueDate?: string }) => {
 
   return await res.json();
 };
-
 
 export const editTodo = async (todo: ITask): Promise<ITask> => {
   const res = await fetch(`/api/tasks/${todo.id}`, {
