@@ -32,6 +32,9 @@ export default function Home() {
   const [tasks, setTasks] = useState<ITask[]>([]);
 
   useEffect(() => {
+    console.log("✅ URL:", process.env.NEXT_PUBLIC_SUPABASE_URL);
+    console.log("✅ KEY:", process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY);
+
     const fetchTasks = async () => {
       const { data, error } = await supabase.from("tasks").select("*");
       if (error) console.error("❌ Supabase error:", error);
