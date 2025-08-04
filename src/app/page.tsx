@@ -1,6 +1,6 @@
-// import { getAllTodos } from "../lib/api";
-// import AddTask from "./components/AddTask";
-// import TodoList from "./components/TodoList";
+import { getAllTodos } from "../lib/api";
+import AddTask from "./components/AddTask";
+import TodoList from "./components/TodoList";
 
 // export default async function Home() {
 //   const tasks = await getAllTodos();
@@ -16,10 +16,38 @@
 //     </main>
 //   );
 // }
+"use client";
+
+import { useEffect, useState } from "react";
+import { createClient } from "@supabase/supabase-js";
+
+// ✅ Supabase client — берёт URL и ключ из .env.local
+const supabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+);
+
 export default function Home() {
+  const [tasks, setTasks] = useState<any[]>([]);
+
+  useEffect(() => {
+    const fetchTasks = async () => {
+      const { data, error } = await supabase.from("tasks").select("*");
+      if (error) console.error("❌ Supabase error:", error);
+      else setTasks(data);
+    };
+
+    fetchTasks();
+  }, []);
+
   return (
-    <main className="flex items-center justify-center h-screen">
-      <h1 className="text-3xl font-bold">Hello World 🌍</h1>
+    <main className="p-6">
+      <h1 className="text-3xl font-bold mb-4">Hello World 🌍</h1>
+      <ul className="list-disc pl-5">
+        {tasks.map((task) => (
+          <li key={task.id}>{task.text}</li>
+        ))}
+      </ul>
     </main>
   );
 }

@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@supabase/supabase-js": "^2.53.0",
     "daisyui": "^5.0.50",
     "dotenv": "^17.2.1",
     "drizzle-orm": "^0.44.4",
