@@ -20,6 +20,7 @@ import TodoList from "./components/TodoList";
 
 import { useEffect, useState } from "react";
 import { createClient } from "@supabase/supabase-js";
+import { ITask } from "@/types/tasks";
 
 // ✅ Supabase client — берёт URL и ключ из .env.local
 const supabase = createClient(
@@ -28,7 +29,7 @@ const supabase = createClient(
 );
 
 export default function Home() {
-  const [tasks, setTasks] = useState<any[]>([]);
+  const [tasks, setTasks] = useState<ITask[]>([]);
 
   useEffect(() => {
     const fetchTasks = async () => {
