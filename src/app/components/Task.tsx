@@ -1,7 +1,7 @@
 "use client";
 
 import { FormEventHandler, useState } from "react";
-import { ITask } from "@/types/tasks";
+import { TaskType } from "@/lib/types";
 import { FiEdit, FiTrash2, FiCheck, FiCalendar } from "react-icons/fi";
 import Modal from "./Modal";
 import { addTodo, completeTodo, deleteTodo, editTodo } from "../../lib/api";
@@ -9,7 +9,7 @@ import { useRouter } from "next/navigation";
 import { assert } from "console";
 
 interface TaskProps {
-  task: ITask;
+  task: TaskType;
 }
 const Task: React.FC<TaskProps> = ({ task }) => {
   const router = useRouter();
@@ -19,7 +19,7 @@ const Task: React.FC<TaskProps> = ({ task }) => {
   const [editDueDate, setEditDueDate] = useState<string>(task.dueDate || "");
 
   const now = new Date();
-const due = new Date(task.dueDate ?? "");
+  const due = new Date(task.dueDate ?? "");
   const diffMs = due.getTime() - now.getTime();
 
   const isOverdue = diffMs < 0;
@@ -48,10 +48,11 @@ const due = new Date(task.dueDate ?? "");
     router.refresh();
   };
   const handleCompleteTask = async (completed: boolean) => {
-    await completeTodo(task.id, !task.completed);
+    await completeTodo(Number(task.id), !task.completed);
     setOpenModalFinished(false);
     router.refresh();
   };
+  //тута смотриииииииииииииииииииии
   return (
     <tr key={task.id}>
       <td>{task.text}</td>
@@ -131,7 +132,7 @@ const due = new Date(task.dueDate ?? "");
             Are you sure, you wand to delete this task?
           </h3>
           <div className="modal-action">
-            <button onClick={() => handleDeleteTask(String(task.id))} className="btn">
+            <button onClick={() => handleDeleteTask(task.id)} className="btn">
               Yes
             </button>
           </div>
