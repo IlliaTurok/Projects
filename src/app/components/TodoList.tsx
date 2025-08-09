@@ -1,11 +1,11 @@
 "use client";
 
-import { ITask } from "../../../types/tasks";
+import { TaskType } from "@/lib/types";
 import Task from "./Task";
 import { useState } from "react";
 
 interface TodoListProps {
-  tasks: ITask[];
+  tasks: TaskType[];
 }
 
 const TodoList: React.FC<TodoListProps> = ({ tasks }) => {
@@ -33,7 +33,7 @@ const filteredTasks = showTodayOnly
           onChange={() => setShowTodayOnly(!showTodayOnly)}
           className="checkbox checkbox-sm"
         />
-        <span className="text-sm">Show only today's tasks</span>
+        <span className="text-sm">Show only todays tasks</span>
       </div>
 
       <table className="table bg-base-100">

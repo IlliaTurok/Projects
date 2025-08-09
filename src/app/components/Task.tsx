@@ -1,7 +1,7 @@
 "use client";
 
 import { FormEventHandler, useState } from "react";
-// import { ITask } from "../../../types/tasks";
+import { TaskType } from "@/lib/types";
 import { FiEdit, FiTrash2, FiCheck, FiCalendar } from "react-icons/fi";
 import Modal from "./Modal";
 import { addTodo, completeTodo, deleteTodo, editTodo } from "../../lib/api";
@@ -9,7 +9,7 @@ import { useRouter } from "next/navigation";
 import { assert } from "console";
 
 interface TaskProps {
-  task: ITask;
+  task: TaskType;
 }
 const Task: React.FC<TaskProps> = ({ task }) => {
   const router = useRouter();
@@ -19,7 +19,7 @@ const Task: React.FC<TaskProps> = ({ task }) => {
   const [editDueDate, setEditDueDate] = useState<string>(task.dueDate || "");
 
   const now = new Date();
-  const due = new Date(task.dueDate);
+  const due = new Date(task.dueDate ?? "");
   const diffMs = due.getTime() - now.getTime();
 
   const isOverdue = diffMs < 0;
@@ -37,6 +37,7 @@ const Task: React.FC<TaskProps> = ({ task }) => {
       id: task.id,
       text: taskToEdit,
       dueDate: editDueDate,
+      completed: task.completed,
     });
     setOpenModalEdit(false);
     router.refresh();
@@ -47,7 +48,7 @@ const Task: React.FC<TaskProps> = ({ task }) => {
     router.refresh();
   };
   const handleCompleteTask = async (completed: boolean) => {
-    await completeTodo(task.id, !task.completed);
+    await completeTodo(Number(task.id), !task.completed);
     setOpenModalFinished(false);
     router.refresh();
   };

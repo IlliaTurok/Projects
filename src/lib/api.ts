@@ -1,6 +1,6 @@
-import { ITask } from "../../types/tasks";
+import { TaskType } from "@/lib/types";
 
-export const getAllTodos = async (): Promise<ITask[]> => {
+export const getAllTodos = async (): Promise<TaskType[]> => {
   const res = await fetch(`http://localhost:3000/api/tasks`, {
     cache: "no-store",
   });
@@ -28,7 +28,7 @@ export const addTodo = async (todo: { text: string; dueDate?: string }) => {
 };
 
 
-export const editTodo = async (todo: ITask): Promise<ITask> => {
+export const editTodo = async (todo: TaskType): Promise<TaskType> => {
   const res = await fetch(`/api/tasks/${todo.id}`, {
     method: "PATCH",
     headers: {
@@ -56,7 +56,7 @@ export const deleteTodo = async (id: string): Promise<void> => {
 export const completeTodo = async (
   id: number,
   completed: boolean
-): Promise<ITask> => {
+): Promise<TaskType> => {
   const res = await fetch(`/api/tasks/${id}`, {
     method: "PATCH",
     headers: { "Content-Type": "application/json" },

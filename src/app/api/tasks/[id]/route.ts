@@ -1,49 +1,59 @@
 import { db } from "@/drizzle/db";
 import { tasks } from "@/drizzle/schema";
 import { eq } from "drizzle-orm";
-import { NextResponse } from "next/server";
+import { NextResponse, NextRequest } from "next/server";
 
-// Update task
+export const runtime = "nodejs";
+
+// PATCH /api/tasks/[id]
 export async function PATCH(
-  req: Request,
-  { params }: { params: { id: string } }
+  req: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { text, completed, dueDate } = await req.json();
+    const { id } = await params;
+    const body = await req.json().catch(() => ({}));
+    const { text, completed, dueDate } = body ?? {};
 
-    const updatedTask = await db
+    const [updated] = await db
       .update(tasks)
       .set({
         ...(text !== undefined && { text }),
         ...(completed !== undefined && { completed }),
         ...(dueDate !== undefined && { dueDate: new Date(dueDate) }),
       })
-      .where(eq(tasks.id, Number(params.id)))
+      .where(eq(tasks.id, Number(id)))
       .returning();
 
-    return NextResponse.json(updatedTask[0]);
+    if (!updated) {
+      return NextResponse.json({ error: "Not found" }, { status: 404 });
+    }
+    return NextResponse.json(updated);
   } catch (error) {
     console.error("PATCH /api/tasks/[id] error:", error);
-    return NextResponse.json(
-      { error: "Failed to update task" },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: "Failed to update task" }, { status: 500 });
   }
 }
 
-//Delete task
+// DELETE /api/tasks/[id]
 export async function DELETE(
-  req: Request,
-  { params }: { params: { id: string } }
+  _req: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    await db.delete(tasks).where(eq(tasks.id, Number(params.id)));
-    return NextResponse.json({ success: true });
+    const { id } = await params;
+
+    const [deleted] = await db
+      .delete(tasks)
+      .where(eq(tasks.id, Number(id)))
+      .returning({ id: tasks.id });
+
+    if (!deleted) {
+      return NextResponse.json({ error: "Not found" }, { status: 404 });
+    }
+    return NextResponse.json({ success: true, id: deleted.id });
   } catch (error) {
     console.error("DELETE /api/tasks/[id] error:", error);
-    return NextResponse.json(
-      { error: "Failed to delete task" },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: "Failed to delete task" }, { status: 500 });
   }
 }
