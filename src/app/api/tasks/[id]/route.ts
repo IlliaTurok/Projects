@@ -1,10 +1,11 @@
-import { db } from "@/drizzle/db";
+import { getDb } from "@/drizzle/db";
 import { tasks } from "@/drizzle/schema";
 import { eq } from "drizzle-orm";
 import { NextResponse, NextRequest } from "next/server";
 
 export const runtime = "nodejs";
 
+const db = getDb();
 // PATCH /api/tasks/[id]
 export async function PATCH(
   req: NextRequest,
