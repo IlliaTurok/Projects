@@ -12,6 +12,7 @@
     "db:studio": "drizzle-kit studio"
   },
   "dependencies": {
+    "@supabase/supabase-js": "^2.54.0",
     "daisyui": "^5.0.50",
     "dotenv": "^17.2.1",
     "lightningcss": "^1.30.1",
