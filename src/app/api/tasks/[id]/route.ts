@@ -5,14 +5,14 @@ import { NextResponse, NextRequest } from "next/server";
 
 export const runtime = "nodejs";
 
-const db = getDb();
 // PATCH /api/tasks/[id]
 export async function PATCH(
   req: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
+  { params }: { params: { id: string } }
 ) {
+  const db = getDb(); // ✅ внутри хендлера
   try {
-    const { id } = await params;
+    const { id } = params;
     const body = await req.json().catch(() => ({}));
     const { text, completed, dueDate } = body ?? {};
 
@@ -39,10 +39,11 @@ export async function PATCH(
 // DELETE /api/tasks/[id]
 export async function DELETE(
   _req: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
+  { params }: { params: { id: string } }
 ) {
+  const db = getDb(); // ✅ внутри хендлера
   try {
-    const { id } = await params;
+    const { id } = params;
 
     const [deleted] = await db
       .delete(tasks)
