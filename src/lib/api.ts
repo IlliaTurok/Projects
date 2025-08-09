@@ -1,78 +1,60 @@
-import { TaskType } from "@/lib/types";
+function getBaseUrl() {
+  // В проде на Vercel:
+  if (process.env.NEXT_PUBLIC_SITE_URL) return process.env.NEXT_PUBLIC_SITE_URL;
+  if (process.env.VERCEL_URL) return `https://${process.env.VERCEL_URL}`;
+  // Локально:
+  return "http://localhost:3000";
+}
 
-// Общая функция проверки ответа
-async function handleResponse<T>(res: Response): Promise<T> {
+async function apiFetch(path: string, init?: RequestInit) {
+  const base = getBaseUrl();
+  const url = new URL(path, base).toString(); // всегда абсолютный URL
+  const res = await fetch(url, init);
   if (!res.ok) {
-    let message = "Request failed";
-    try {
-      const err = await res.json();
-      if (err?.error) message = err.error;
-    } catch {
-      message = await res.text();
-    }
-    throw new Error(message || `HTTP ${res.status}`);
+    const txt = await res.text().catch(() => "");
+    throw new Error(txt || `Request failed: ${res.status}`);
   }
   return res.json();
 }
 
-// Хелпер для формирования dueDate
-function normalizeDueDate(dueDate?: string) {
-  if (!dueDate) return undefined;
-  // Добавляем секунды и Z, если не указаны
-  if (!dueDate.includes("Z")) {
-    return new Date(`${dueDate}:00`).toISOString();
-  }
-  return new Date(dueDate).toISOString();
-}
+// === Использование ===
+import { TaskType } from "@/lib/types";
 
-// Получение всех задач
 export const getAllTodos = async (): Promise<TaskType[]> => {
-  const res = await fetch(`/api/tasks`, { cache: "no-store" });
-  return handleResponse<TaskType[]>(res);
+  return apiFetch("/api/tasks", { cache: "no-store" });
 };
 
-// Добавление задачи
 export const addTodo = async (todo: { text: string; dueDate?: string }) => {
-  const res = await fetch(`/api/tasks`, {
+  return apiFetch("/api/tasks", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      text: todo.text,
-      dueDate: normalizeDueDate(todo.dueDate),
-    }),
+    body: JSON.stringify(todo),
   });
-  return handleResponse<TaskType>(res);
 };
 
-// Редактирование задачи
 export const editTodo = async (todo: TaskType): Promise<TaskType> => {
-  const res = await fetch(`/api/tasks/${Number(todo.id)}`, {
+  return apiFetch(`/api/tasks/${Number(todo.id)}`, {
     method: "PATCH",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
       text: todo.text,
-      dueDate: normalizeDueDate(todo.dueDate),
+      dueDate: todo.dueDate,
       completed: todo.completed,
     }),
   });
-  return handleResponse<TaskType>(res);
 };
 
-// Удаление задачи
 export const deleteTodo = async (id: string | number): Promise<void> => {
-  const res = await fetch(`/api/tasks/${Number(id)}`, { method: "DELETE" });
-  await handleResponse(res);
+  await apiFetch(`/api/tasks/${Number(id)}`, { method: "DELETE" });
 };
 
-// Завершение задачи
 export const completeTodo = async (
   id: string | number,
   completed: boolean
 ): Promise<TaskType> => {
-  const res = await fetch(`/api/tasks/${Number(id)}`, {
+  return apiFetch(`/api/tasks/${Number(id)}`, {
     method: "PATCH",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ completed }),
   });
-  return handleResponse<TaskType>(res);
 };
