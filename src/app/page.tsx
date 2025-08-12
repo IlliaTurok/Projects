@@ -1,20 +1,19 @@
-// app/page.tsx
 import { getDb } from "@/drizzle/db";
 import { tasks as tasksTable } from "@/drizzle/schema";
 import { desc } from "drizzle-orm";
 import AddTask from "./components/AddTask";
 import TodoList from "./components/TodoList";
-import { TaskType } from "@/lib/types";
 
 export const runtime = "nodejs";
-export const dynamic = 'force-dynamic'  
-export const revalidate = 0
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
 
 export default async function Home() {
   const db = getDb();
   const rows = await db.select().from(tasksTable).orderBy(desc(tasksTable.createdAt));
 
-  const tasks: TaskType[] = rows.map((r) => ({
+  // Приводим к клиентскому типу (строки вместо Date/number)
+  const tasks = rows.map((r) => ({
     id: String(r.id),
     text: r.text,
     completed: Boolean(r.completed),
