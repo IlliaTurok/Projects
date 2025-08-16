@@ -1,21 +1,24 @@
+// src/lib/api.ts
 function getBaseUrl() {
-  // В проде на Vercel:
+  // В браузере — относительный путь (никаких http://localhost)
+  if (typeof window !== "undefined") return "";
+
+  // На сервере можно использовать Vercel URL, если он есть
   if (process.env.NEXT_PUBLIC_SITE_URL) return process.env.NEXT_PUBLIC_SITE_URL;
   if (process.env.VERCEL_URL) return `https://${process.env.VERCEL_URL}`;
-  // Локально:
+
+  // Фолбэк для локалки
   return "http://localhost:3000";
 }
 
 async function apiFetch(path: string, init?: RequestInit) {
   const base = getBaseUrl();
-  const url = new URL(path, base).toString(); // всегда абсолютный URL
-  const res = await fetch(url, init);
-  if (!res.ok) {
-    const txt = await res.text().catch(() => "");
-    throw new Error(txt || `Request failed: ${res.status}`);
-  }
+  const url = base ? new URL(path, base).toString() : path; // в браузере останется "/api/..."
+  const res = await fetch(url, { cache: "no-store", ...init });
+  if (!res.ok) throw new Error(await res.text().catch(() => `Request failed: ${res.status}`));
   return res.json();
 }
+
 
 // === Использование ===
 import { TaskType } from "@/lib/types";
