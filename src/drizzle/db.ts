@@ -15,6 +15,7 @@ export function getDb(): NodePgDatabase<typeof schema> {
   // На Vercel (или вообще в production) ВСЕГДА включаем SSL с поблажкой:
   const isProd = !!process.env.VERCEL || process.env.NODE_ENV === "production";
 
+
   const poolOpts: ConstructorParameters<typeof Pool>[0] = {
     connectionString: cs,
     ...(isProd ? { ssl: { rejectUnauthorized: false } } : {}),
