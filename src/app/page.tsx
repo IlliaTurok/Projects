@@ -12,7 +12,6 @@ export default async function Home() {
   const db = getDb();
   const rows = await db.select().from(tasksTable).orderBy(desc(tasksTable.createdAt));
 
-  // Приводим к клиентскому типу (строки вместо Date/number)
   const tasks = rows.map((r) => ({
     id: String(r.id),
     text: r.text,
