@@ -26,6 +26,10 @@ export function getDb(): NodePgDatabase<typeof schema> {
     connectionTimeoutMillis: Number(process.env.PG_CONN_TIMEOUT ?? 5_000),
     application_name: process.env.VERCEL ? "vercel-app" : "local-dev",
   };
+  try {
+  const u = new URL(process.env.DATABASE_URL!);
+  console.log("[db] url flags", { search: u.search });
+  } catch {}
 
   if (!globalThis.__pgPool__) {
     // Разовый лог, чтобы в логах Vercel было видно, что реально подхватилось
