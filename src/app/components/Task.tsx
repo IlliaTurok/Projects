@@ -52,7 +52,6 @@ const Task: React.FC<TaskProps> = ({ task }) => {
     setOpenModalFinished(false);
     router.refresh();
   };
-  //тута смотриииииииииииииииииииии
   return (
     <tr key={task.id}>
       <td>{task.text}</td>

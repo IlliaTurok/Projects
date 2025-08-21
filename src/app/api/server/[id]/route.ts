@@ -1,28 +1,26 @@
+// src/app/api/tasks/[id]/route.ts
 import { updateTask, deleteTask } from "@/repositories/task.repo";
-
-import { NextResponse, NextRequest } from "next/server";
+import { NextResponse } from "next/server";
 
 export const runtime = "nodejs";
 
-// Here was a big error with Promise
+// PATCH /api/tasks/[id]
 export async function PATCH(
-  req: NextRequest,
-  { params }: { params: { id: string } }
+  req: Request,
+  ctx: { params: Promise<{ id: string }> }
 ) {
   try {
-    const idNum = Number(params.id);
+    const { id } = await ctx.params;
+    const idNum = Number(id);
     if (Number.isNaN(idNum)) {
       return NextResponse.json({ error: "Invalid task ID" }, { status: 400 });
     }
 
     const body = await req.json().catch(() => ({}));
-    const { text, completed, dueDate } = body ?? {};
-
-    const updated = await updateTask(idNum, { text, completed, dueDate });
+    const updated = await updateTask(idNum, body);
     if (!updated) {
       return NextResponse.json({ error: "Not found" }, { status: 404 });
     }
-
     return NextResponse.json(updated);
   } catch (error) {
     console.error("PATCH /api/tasks/[id] error:", error);
@@ -33,21 +31,22 @@ export async function PATCH(
   }
 }
 
+// DELETE /api/tasks/[id]
 export async function DELETE(
-  _req: NextRequest,
-  { params }: { params: { id: string } }
+  _req: Request,
+  ctx: { params: Promise<{ id: string }> }
 ) {
   try {
-    const idNum = Number(params.id);
+    const { id } = await ctx.params;
+    const idNum = Number(id);
     if (Number.isNaN(idNum)) {
-      return NextResponse.json({ error: "Invalid id" }, { status: 400 });
+      return NextResponse.json({ error: "Invalid task ID" }, { status: 400 });
     }
 
     const deleted = await deleteTask(idNum);
     if (!deleted) {
       return NextResponse.json({ error: "Not found" }, { status: 404 });
     }
-
     return NextResponse.json({ success: true, id: deleted.id });
   } catch (error) {
     console.error("DELETE /api/tasks/[id] error:", error);
