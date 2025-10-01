@@ -1,3 +1,4 @@
+// import * as repo from "@/repositories/task.repo";
 // src/lib/api.ts
 function getBaseUrl() {
   // В браузере — относительный путь (никаких http://localhost)
@@ -21,7 +22,7 @@ async function apiFetch(path: string, init?: RequestInit) {
 
 
 // === Использование ===
-import { TaskType } from "@/lib/types";
+import { TaskType } from "@/types/task";
 
 export const getAllTodos = async (): Promise<TaskType[]> => {
   return apiFetch("/api/tasks", { cache: "no-store" });
