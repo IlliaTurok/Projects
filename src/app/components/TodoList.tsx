@@ -1,6 +1,6 @@
 "use client";
 
-import { TaskType } from "@/lib/types";
+import { TaskType } from "@/types/task";
 import Task from "./Task";
 import { useState } from "react";
 

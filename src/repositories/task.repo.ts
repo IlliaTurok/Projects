@@ -1,8 +1,16 @@
 import { getDb } from "@/drizzle/db";
 import { tasks } from "@/drizzle/schema";
 import { eq, desc } from "drizzle-orm";
+import type { Task } from "@/types/task";
 
-// получить все задачи (сортировка по созданию — удобнее)
+// Получить все задачи (сортировка по createdAt ↓)
+
+export async function getTaskById(id: number): Promise<Task | null> {
+  const db = getDb();
+  const [row] = await db.select().from(tasks).where(eq(tasks.id, id));
+  return row ?? null;
+}
+
 export async function getAllTasks() {
   const db = getDb();
   return db.select().from(tasks).orderBy(desc(tasks.createdAt));
@@ -24,6 +32,7 @@ export async function createTask(body: { text: string; dueDate?: string | null }
     }
   }
 
+  // возвращаем все поля задачи, включая updatedAt
   const [created] = await db.insert(tasks).values(values).returning();
   return created ?? null;
 }
@@ -57,15 +66,15 @@ export async function updateTask(
 
   if (Object.keys(setData).length === 0) return null;
 
+  // возвращаем полную запись, а не только часть
   const [updated] = await db.update(tasks).set(setData).where(eq(tasks.id, id)).returning();
   return updated ?? null;
 }
 
 export async function deleteTask(id: number) {
   const db = getDb();
-  const [deleted] = await db
-    .delete(tasks)
-    .where(eq(tasks.id, id))
-    .returning({ id: tasks.id });
+
+  // важно: возвращаем все колонки, а не только id
+  const [deleted] = await db.delete(tasks).where(eq(tasks.id, id)).returning();
   return deleted ?? null;
 }

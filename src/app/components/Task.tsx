@@ -1,12 +1,11 @@
 "use client";
 
 import { FormEventHandler, useState } from "react";
-import { TaskType } from "@/lib/types";
-import { FiEdit, FiTrash2, FiCheck, FiCalendar } from "react-icons/fi";
+import { TaskType } from "@/types/task";
+import { FiEdit, FiTrash2, FiCheck} from "react-icons/fi";
 import Modal from "./Modal";
-import { addTodo, completeTodo, deleteTodo, editTodo } from "../../lib/api";
+import { completeTodo, deleteTodo, editTodo } from "@/lib/api";
 import { useRouter } from "next/navigation";
-import { assert } from "console";
 
 interface TaskProps {
   task: TaskType;
@@ -14,8 +13,8 @@ interface TaskProps {
 const Task: React.FC<TaskProps> = ({ task }) => {
   const router = useRouter();
   const [openModalEdit, setOpenModalEdit] = useState<boolean>(false);
-  const [openModalFinished, setOpenModalFinished] = useState<boolean>(false);
-  const [dueDate, setDueDate] = useState<string>("");
+  // const [setOpenModalFinished] = useState<boolean>(false);
+  // const [dueDate, setDueDate] = useState<string>("");
   const [editDueDate, setEditDueDate] = useState<string>(task.dueDate || "");
 
   const now = new Date();
@@ -47,9 +46,9 @@ const Task: React.FC<TaskProps> = ({ task }) => {
     setOpenModalDeleted(false);
     router.refresh();
   };
-  const handleCompleteTask = async (completed: boolean) => {
+  const handleCompleteTask = async () => {
     await completeTodo(Number(task.id), !task.completed);
-    setOpenModalFinished(false);
+    // setOpenModalFinished(false);
     router.refresh();
   };
   return (
@@ -57,7 +56,7 @@ const Task: React.FC<TaskProps> = ({ task }) => {
       <td>{task.text}</td>
       <td>
         <FiCheck
-          onClick={() => handleCompleteTask(task.completed)}
+          onClick={() => handleCompleteTask()}
           cursor="pointer"
           className={`ml-7 ${
             task.completed ? "text-green-500" : "text-blue-700"
