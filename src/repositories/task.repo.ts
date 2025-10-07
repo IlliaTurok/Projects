@@ -3,7 +3,7 @@ import { tasks } from "@/drizzle/schema";
 import { eq, desc } from "drizzle-orm";
 import type { Task } from "@/types/task";
 
-// Получить все задачи (сортировка по createdAt ↓)
+// Get all tasks (sorted by createdAt desc)
 
 export async function getTaskById(id: number): Promise<Task | null> {
   const db = getDb();
@@ -32,7 +32,7 @@ export async function createTask(body: { text: string; dueDate?: string | null }
     }
   }
 
-  // возвращаем все поля задачи, включая updatedAt
+  // important: return full row, not partial
   const [created] = await db.insert(tasks).values(values).returning();
   return created ?? null;
 }
@@ -66,7 +66,7 @@ export async function updateTask(
 
   if (Object.keys(setData).length === 0) return null;
 
-  // возвращаем полную запись, а не только часть
+  // important: return full row, not only id
   const [updated] = await db.update(tasks).set(setData).where(eq(tasks.id, id)).returning();
   return updated ?? null;
 }
@@ -74,7 +74,7 @@ export async function updateTask(
 export async function deleteTask(id: number) {
   const db = getDb();
 
-  // важно: возвращаем все колонки, а не только id
+  // important: return full row, not only id
   const [deleted] = await db.delete(tasks).where(eq(tasks.id, id)).returning();
   return deleted ?? null;
 }

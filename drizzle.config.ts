@@ -20,7 +20,7 @@ export default {
     user: decodeURIComponent(url.username),
     password: decodeURIComponent(url.password),
     database: url.pathname.replace(/^\//, ""),
-    // SSL для Supabase/Vercel, локально можно false
+    //Use SSL for Supabase/Vercel; can be false locally
     ssl: isProd ? "require" : false,
   },
   verbose: true,

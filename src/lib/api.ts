@@ -1,27 +1,25 @@
-// import * as repo from "@/repositories/task.repo";
-// src/lib/api.ts
+
 function getBaseUrl() {
-  // В браузере — относительный путь (никаких http://localhost)
+ // → In browser use relative path
   if (typeof window !== "undefined") return "";
 
-  // На сервере можно использовать Vercel URL, если он есть
+  // On server use Vercel URL if available
   if (process.env.NEXT_PUBLIC_SITE_URL) return process.env.NEXT_PUBLIC_SITE_URL;
   if (process.env.VERCEL_URL) return `https://${process.env.VERCEL_URL}`;
 
-  // Фолбэк для локалки
+  // Fallback for local development
   return "http://localhost:3000";
 }
 
 async function apiFetch(path: string, init?: RequestInit) {
   const base = getBaseUrl();
-  const url = base ? new URL(path, base).toString() : path; // в браузере останется "/api/..."
+  const url = base ? new URL(path, base).toString() : path;
   const res = await fetch(url, { cache: "no-store", ...init });
   if (!res.ok) throw new Error(await res.text().catch(() => `Request failed: ${res.status}`));
   return res.json();
 }
 
 
-// === Использование ===
 import { TaskType } from "@/types/task";
 
 export const getAllTodos = async (): Promise<TaskType[]> => {

@@ -10,7 +10,7 @@ type Params = { id: string };
 
 export async function PATCH(req: Request, ctx: { params: Promise<Params> }) {
   try {
-    const { id } = await ctx.params; // ⬅️ await
+    const { id } = await ctx.params; 
     const body = await req.json().catch(() => ({}));
     const updated = await tasksService.update(Number(id), body);
     return NextResponse.json(updated);
@@ -24,7 +24,7 @@ export async function PATCH(req: Request, ctx: { params: Promise<Params> }) {
 // DELETE /api/tasks/[id]
 export async function DELETE(_req: Request, ctx: { params: Promise<Params> }) {
   try {
-    const { id } = await ctx.params; // ⬅️ await
+    const { id } = await ctx.params; 
     const deleted = await tasksService.remove(Number(id));
     return NextResponse.json(deleted);
   } catch (e: unknown) {
