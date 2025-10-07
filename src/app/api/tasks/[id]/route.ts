@@ -1,5 +1,6 @@
-import * as tasksService from "@/app/services/tasks.service";
-import { BadRequestError, NotFoundError } from "@/app/services/tasks.service";
+import * as tasksService from "@/services/tasks.service";
+
+import { BadRequestError, NotFoundError } from "@/services/tasks.service";
 
 import { NextResponse } from "next/server";
 
