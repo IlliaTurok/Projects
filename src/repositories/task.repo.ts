@@ -16,7 +16,10 @@ export async function getAllTasks() {
   return db.select().from(tasks).orderBy(desc(tasks.createdAt));
 }
 
-export async function createTask(body: { text: string; dueDate?: string | null }) {
+export async function createTask(body: {
+  text: string;
+  dueDate?: string | null;
+}) {
   const db = getDb();
 
   const values: {
@@ -67,7 +70,11 @@ export async function updateTask(
   if (Object.keys(setData).length === 0) return null;
 
   // important: return full row, not only id
-  const [updated] = await db.update(tasks).set(setData).where(eq(tasks.id, id)).returning();
+  const [updated] = await db
+    .update(tasks)
+    .set(setData)
+    .where(eq(tasks.id, id))
+    .returning();
   return updated ?? null;
 }
 

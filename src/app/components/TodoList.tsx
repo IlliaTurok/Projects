@@ -11,18 +11,17 @@ interface TodoListProps {
 const TodoList: React.FC<TodoListProps> = ({ tasks }) => {
   const [showTodayOnly, setShowTodayOnly] = useState(false);
 
-const filteredTasks = showTodayOnly
-  ? tasks.filter((task) => {
-      if (!task.dueDate || task.completed) return false;
+  const filteredTasks = showTodayOnly
+    ? tasks.filter((task) => {
+        if (!task.dueDate || task.completed) return false;
 
-      const now = new Date();
-      const due = new Date(task.dueDate);
-      const diffMs = due.getTime() - now.getTime();
+        const now = new Date();
+        const due = new Date(task.dueDate);
+        const diffMs = due.getTime() - now.getTime();
 
-      return diffMs > 0 && diffMs <= 24 * 60 * 60 * 1000;
-    })
-  : tasks;
-
+        return diffMs > 0 && diffMs <= 24 * 60 * 60 * 1000;
+      })
+    : tasks;
 
   return (
     <div className="overflow-x-auto">

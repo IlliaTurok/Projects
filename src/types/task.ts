@@ -8,20 +8,19 @@ export type Task = {
   updatedAt?: Date | null;
 };
 
-
 export type CreateTaskDto = {
   text: string;
-  dueDate?: string | null;    
+  dueDate?: string | null;
 };
 
 export type UpdateTaskPatch = {
   text?: string;
   completed?: boolean;
-  dueDate?: string | null;    
+  dueDate?: string | null;
 };
 
 export type ListOptions = {
-  todayOnly?: boolean;       
+  todayOnly?: boolean;
 };
 
 export interface TaskType {

@@ -6,7 +6,6 @@ import { BadRequestError } from "@/services/tasks.service";
 
 import { NextResponse } from "next/server";
 
-
 export const runtime = "nodejs";
 
 interface TaskCreateBody {

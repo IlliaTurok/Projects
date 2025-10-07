@@ -2,7 +2,7 @@
 
 import { FormEventHandler, useState } from "react";
 import { TaskType } from "@/types/task";
-import { FiEdit, FiTrash2, FiCheck} from "react-icons/fi";
+import { FiEdit, FiTrash2, FiCheck } from "react-icons/fi";
 import Modal from "./Modal";
 import { completeTodo, deleteTodo, editTodo } from "@/lib/api";
 import { useRouter } from "next/navigation";

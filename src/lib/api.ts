@@ -1,8 +1,8 @@
 import { TaskType } from "@/types/task";
 
 function getBaseUrl() {
- // Priority: site URL (explicit) - Vercel URL - localhost.
- // In the browser we use a relative path (no absolute http://localhost).
+  // Priority: site URL (explicit) - Vercel URL - localhost.
+  // In the browser we use a relative path (no absolute http://localhost).
   if (typeof window !== "undefined") return "";
 
   // On the server prefer an explicit public site URL first
@@ -20,7 +20,10 @@ async function apiFetch(path: string, init?: RequestInit) {
   const url = base ? new URL(path, base).toString() : path;
   const res = await fetch(url, { cache: "no-store", ...init });
   // Throw rich error with response text for easier debugging in dev/logs.
-  if (!res.ok) throw new Error(await res.text().catch(() => `Request failed: ${res.status}`));
+  if (!res.ok)
+    throw new Error(
+      await res.text().catch(() => `Request failed: ${res.status}`)
+    );
   return res.json();
 }
 
