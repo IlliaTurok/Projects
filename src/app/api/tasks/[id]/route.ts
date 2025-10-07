@@ -1,3 +1,5 @@
+// Thin route handlers: HTTP/Dtos only; all business logic lives in services.
+
 import * as tasksService from "@/services/tasks.service";
 
 import { BadRequestError, NotFoundError } from "@/services/tasks.service";
@@ -10,6 +12,8 @@ type Params = { id: string };
 
 export async function PATCH(req: Request, ctx: { params: Promise<Params> }) {
   try {
+    // NOTE: no zod schema here — best-effort validation happens in the service layer.
+    // TODO: add zod/valibot to validate PATCH body and provide better 400 responses.
     const { id } = await ctx.params; 
     const body = await req.json().catch(() => ({}));
     const updated = await tasksService.update(Number(id), body);

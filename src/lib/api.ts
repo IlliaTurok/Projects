@@ -1,13 +1,17 @@
+import { TaskType } from "@/types/task";
 
 function getBaseUrl() {
- // → In browser use relative path
+ // Priority: site URL (explicit) - Vercel URL - localhost.
+ // In the browser we use a relative path (no absolute http://localhost).
   if (typeof window !== "undefined") return "";
 
-  // On server use Vercel URL if available
+  // On the server prefer an explicit public site URL first
   if (process.env.NEXT_PUBLIC_SITE_URL) return process.env.NEXT_PUBLIC_SITE_URL;
+
+  // Fallback to Vercel-provided URL in serverless/production
   if (process.env.VERCEL_URL) return `https://${process.env.VERCEL_URL}`;
 
-  // Fallback for local development
+  // Local fallback for dev
   return "http://localhost:3000";
 }
 
@@ -15,12 +19,10 @@ async function apiFetch(path: string, init?: RequestInit) {
   const base = getBaseUrl();
   const url = base ? new URL(path, base).toString() : path;
   const res = await fetch(url, { cache: "no-store", ...init });
+  // Throw rich error with response text for easier debugging in dev/logs.
   if (!res.ok) throw new Error(await res.text().catch(() => `Request failed: ${res.status}`));
   return res.json();
 }
-
-
-import { TaskType } from "@/types/task";
 
 export const getAllTodos = async (): Promise<TaskType[]> => {
   return apiFetch("/api/tasks", { cache: "no-store" });

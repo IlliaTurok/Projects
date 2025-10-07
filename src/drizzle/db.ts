@@ -2,6 +2,9 @@ import { drizzle, type NodePgDatabase } from "drizzle-orm/node-postgres";
 import { Pool } from "pg";
 import * as schema from "./schema";
 
+// Singleton via globalThis to avoid creating multiple pools in dev (Next hot reload)
+// and to ensure a single shared connection pool in production.
+// This prevents exhausting DB connections and keeps Drizzle instance stable.
 declare global {
 
   var __drizzleDb__: NodePgDatabase<typeof schema> | undefined;
