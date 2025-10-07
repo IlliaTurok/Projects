@@ -6,7 +6,6 @@ import * as schema from "./schema";
 // and to ensure a single shared connection pool in production.
 // This prevents exhausting DB connections and keeps Drizzle instance stable.
 declare global {
-
   var __drizzleDb__: NodePgDatabase<typeof schema> | undefined;
 
   var __pgPool__: Pool | undefined;

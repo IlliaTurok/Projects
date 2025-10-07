@@ -1,17 +1,39 @@
 import "server-only";
 import * as repo from "@/repositories/task.repo";
-import type { Task as DbTask, CreateTaskDto, UpdateTaskPatch } from "@/types/task";
+import type {
+  Task as DbTask,
+  CreateTaskDto,
+  UpdateTaskPatch,
+} from "@/types/task";
 
-export class BadRequestError extends Error { readonly code = 400 as const; constructor(m: string) { super(m); this.name = "BadRequestError"; } }
-export class NotFoundError  extends Error { readonly code = 404 as const; constructor(m: string) { super(m); this.name = "NotFoundError"; } }
-export class DatabaseError  extends Error { readonly code = 500 as const; constructor(m: string) { super(m); this.name = "DatabaseError"; } }
+export class BadRequestError extends Error {
+  readonly code = 400 as const;
+  constructor(m: string) {
+    super(m);
+    this.name = "BadRequestError";
+  }
+}
+export class NotFoundError extends Error {
+  readonly code = 404 as const;
+  constructor(m: string) {
+    super(m);
+    this.name = "NotFoundError";
+  }
+}
+export class DatabaseError extends Error {
+  readonly code = 500 as const;
+  constructor(m: string) {
+    super(m);
+    this.name = "DatabaseError";
+  }
+}
 
 // UI representation of a Task
 export type UiTask = {
   id: string;
   text: string;
   completed: boolean;
-  dueDate?: string;   // ISO string | undefined
+  dueDate?: string; // ISO string | undefined
   createdAt?: string; // ISO string | undefined
 };
 
@@ -57,7 +79,9 @@ export async function list(): Promise<UiTask[]> {
     const tasks = await repo.getAllTasks();
     return tasks.map(toUi);
   } catch (e: unknown) {
-    throw new DatabaseError(e instanceof Error ? e.message : "failed to list tasks");
+    throw new DatabaseError(
+      e instanceof Error ? e.message : "failed to list tasks"
+    );
   }
 }
 
@@ -67,22 +91,32 @@ export async function getById(id: number | string): Promise<UiTask | null> {
     const found = await repo.getTaskById(parsed);
     return found ? toUi(found) : null;
   } catch (e: unknown) {
-    throw new DatabaseError(e instanceof Error ? e.message : "failed to get task");
+    throw new DatabaseError(
+      e instanceof Error ? e.message : "failed to get task"
+    );
   }
 }
 
 export async function create(dto: CreateTaskDto): Promise<UiTask> {
   const text = normalizeText(dto.text);
   try {
-    const created = await repo.createTask({ text, dueDate: dto.dueDate ?? null });
+    const created = await repo.createTask({
+      text,
+      dueDate: dto.dueDate ?? null,
+    });
     if (!created) throw new DatabaseError("failed to create task");
     return toUi(created);
   } catch (e: unknown) {
-    throw new DatabaseError(e instanceof Error ? e.message : "failed to create task");
+    throw new DatabaseError(
+      e instanceof Error ? e.message : "failed to create task"
+    );
   }
 }
 
-export async function update(id: number | string, patch: UpdateTaskPatch): Promise<UiTask> {
+export async function update(
+  id: number | string,
+  patch: UpdateTaskPatch
+): Promise<UiTask> {
   const parsed = parseId(id);
   try {
     const updated = await repo.updateTask(parsed, patch);
@@ -90,7 +124,9 @@ export async function update(id: number | string, patch: UpdateTaskPatch): Promi
     return toUi(updated);
   } catch (e: unknown) {
     if (e instanceof NotFoundError) throw e;
-    throw new DatabaseError(e instanceof Error ? e.message : "failed to update task");
+    throw new DatabaseError(
+      e instanceof Error ? e.message : "failed to update task"
+    );
   }
 }
 
@@ -102,6 +138,8 @@ export async function remove(id: number | string): Promise<UiTask> {
     return toUi(deleted);
   } catch (e: unknown) {
     if (e instanceof NotFoundError) throw e;
-    throw new DatabaseError(e instanceof Error ? e.message : "failed to delete task");
+    throw new DatabaseError(
+      e instanceof Error ? e.message : "failed to delete task"
+    );
   }
 }
