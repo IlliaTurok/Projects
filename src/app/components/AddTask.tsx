@@ -1,9 +1,8 @@
 "use client";
-
+import { addTodo } from "@/lib/api";
 import { AiOutlinePlus } from "react-icons/ai";
 import Modal from "./Modal";
 import { FormEventHandler, useState } from "react";
-import { addTodo } from "../../lib/api";
 import { useRouter } from "next/navigation";
 
 const AddTask = () => {

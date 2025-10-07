@@ -15,6 +15,9 @@ export type UiTask = {
   createdAt?: string; // ISO string | undefined
 };
 
+// Accept both string and number ids.
+// Reason: Next.js route params come as strings, while repo/DB expect numbers.
+// We normalize here so other layers don't care about the source format.
 function parseId(id: unknown): number {
   const n = typeof id === "string" ? Number(id) : id;
   if (typeof n !== "number" || !Number.isInteger(n) || n <= 0) {
@@ -35,7 +38,10 @@ function toIso(d: Date | null | undefined): string | undefined {
   return d ? new Date(d).toISOString() : undefined;
 }
 
-// Converts DbTask (from DB) to UiTask (for UI)
+// Map DB model -> UI model.
+// DB returns real types (id:number, dates as Date|null).
+// UI expects a serialized contract (id:string, dates as ISO string|undefined),
+// so we normalize here to keep API/React components simple and consistent.
 function toUi(t: DbTask): UiTask {
   return {
     id: String(t.id),

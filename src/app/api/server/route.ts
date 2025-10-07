@@ -1,3 +1,5 @@
+// Thin route handlers: HTTP/Dtos only; all business logic lives in services.
+
 import * as tasksService from "@/services/tasks.service";
 
 import { BadRequestError } from "@/services/tasks.service";
@@ -24,6 +26,8 @@ export async function GET() {
 
 export async function POST(req: Request) {
   try {
+    // NOTE: no zod schema here — we rely on best-effort validation in the service.
+    // TODO: add zod/valibot input schema to return precise 400 errors on bad payloads.
     const body = (await req.json().catch(() => ({}))) as TaskCreateBody;
     const created = await tasksService.create({
       text: body.text ?? "",
