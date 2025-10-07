@@ -3,9 +3,9 @@ import { Pool } from "pg";
 import * as schema from "./schema";
 
 declare global {
-  // eslint-disable-next-line no-var
+
   var __drizzleDb__: NodePgDatabase<typeof schema> | undefined;
-  // eslint-disable-next-line no-var
+
   var __pgPool__: Pool | undefined;
 }
 

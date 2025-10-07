@@ -1,6 +1,4 @@
-import { getDb } from "@/drizzle/db";
-import { tasks as tasksTable } from "@/drizzle/schema";
-import { desc } from "drizzle-orm";
+import { list } from "@/services/tasks.service";
 import AddTask from "./components/AddTask";
 import TodoList from "./components/TodoList";
 
@@ -9,16 +7,7 @@ export const dynamic = "force-dynamic";
 export const revalidate = 0;
 
 export default async function Home() {
-  const db = getDb();
-  const rows = await db.select().from(tasksTable).orderBy(desc(tasksTable.createdAt));
-
-  const tasks = rows.map((r) => ({
-    id: String(r.id),
-    text: r.text,
-    completed: Boolean(r.completed),
-    dueDate: r.dueDate ? new Date(r.dueDate).toISOString() : undefined,
-    createdAt: r.createdAt ? new Date(r.createdAt).toISOString() : undefined,
-  }));
+  const tasks = await list();
 
   return (
     <main className="max-w-4xl mx-auto mt-4">
