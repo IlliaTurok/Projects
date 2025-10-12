@@ -69,7 +69,7 @@ export async function updateTask(
 
   if (Object.keys(setData).length === 0) return null;
 
-  // important: return full row, not only id
+  // important: return full row, not only ID
   const [updated] = await db
     .update(tasks)
     .set(setData)
@@ -81,7 +81,7 @@ export async function updateTask(
 export async function deleteTask(id: number) {
   const db = getDb();
 
-  // important: return full row, not only id
+  // important: return full row, not only ID
   const [deleted] = await db.delete(tasks).where(eq(tasks.id, id)).returning();
   return deleted ?? null;
 }
