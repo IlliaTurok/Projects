@@ -1,6 +1,7 @@
 import { TaskType } from "@/types/task";
 
 function getBaseUrl() {
+  
   // Priority: site URL (explicit) - Vercel URL - localhost.
   // In the browser we use a relative path (no absolute http://localhost).
   if (typeof window !== "undefined") return "";
